@@ -87,13 +87,6 @@ CREATE TABLE `avaliacao_proprietario` (
   `data_avaliacao` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `avaliacao_proprietario`
---
-
-INSERT INTO `avaliacao_proprietario` (`id`, `reserva_id`, `usuario_id`, `proprietario_id`, `nota`, `comentario`, `data_avaliacao`) VALUES
-(1, 2, 6, 1, 5, 'teste', '2026-04-16 16:13:24'),
-(2, 4, 2, 1, 5, 'teste', '2026-04-26 13:52:36');
 
 -- --------------------------------------------------------
 
@@ -111,13 +104,6 @@ CREATE TABLE `avaliacao_veiculo` (
   `data_avaliacao` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `avaliacao_veiculo`
---
-
-INSERT INTO `avaliacao_veiculo` (`id`, `reserva_id`, `usuario_id`, `veiculo_id`, `nota`, `comentario`, `data_avaliacao`) VALUES
-(1, 2, 6, 2, 5, 'teste', '2026-04-16 16:13:24'),
-(2, 4, 2, 1, 5, 'teste', '2026-04-26 13:52:36');
 
 -- --------------------------------------------------------
 
@@ -130,19 +116,6 @@ CREATE TABLE `categoria_veiculo` (
   `categoria` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `categoria_veiculo`
---
-
-INSERT INTO `categoria_veiculo` (`id`, `categoria`) VALUES
-(1, 'Coupé'),
-(2, 'Sedan'),
-(3, 'SUV'),
-(4, 'Hatch'),
-(5, 'Picape'),
-(6, 'Conversível'),
-(7, 'Perua'),
-(8, 'Minivan');
 
 -- --------------------------------------------------------
 
@@ -156,23 +129,6 @@ CREATE TABLE `cidade` (
   `cidade_nome` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `cidade`
---
-
-INSERT INTO `cidade` (`id`, `estado_id`, `cidade_nome`) VALUES
-(7, 4, 'Manaus'),
-(9, 5, 'Salvador'),
-(12, 6, 'Fortaleza'),
-(14, 7, 'Brasília'),
-(25, 13, 'Belo Horizonte'),
-(32, 16, 'Curitiba'),
-(34, 16, 'Foz do Iguaçu'),
-(36, 17, 'Recife'),
-(40, 19, 'Rio de Janeiro'),
-(45, 21, 'Porto Alegre'),
-(52, 24, 'Florianópolis'),
-(55, 25, 'São Paulo');
 
 -- --------------------------------------------------------
 
@@ -208,22 +164,16 @@ CREATE TABLE `conta_usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `conta_usuario`
+-- Dados iniciais publicos para ambiente demo
+-- Senha das contas demo: password
 --
 
 INSERT INTO `conta_usuario` (`id`, `is_admin`, `ativo`, `primeiro_nome`, `segundo_nome`, `telefone`, `e_mail`, `senha`, `data_de_entrada`, `foto_perfil`, `cpf`, `foto_cnh_frente`, `foto_cnh_verso`, `status_docs`, `data_verificacao`, `admin_verificacao`, `tem_cnh`, `cadastro_completo`, `observacoes_docs`, `mensagens_nao_lidas`, `media_avaliacao_proprietario`, `total_avaliacoes_proprietario`, `media_avaliacao_locatario`, `total_avaliacoes_locatario`) VALUES
-(1, 1, 1, 'Andryus', 'Zolet', '(41) 99796-3268', 'zoletandryus@gmail.com', '$2y$10$q7m/RxOCrcZvSi.1SKShC.u3.5DKHyyVQR7Nk3oFgX/9F0.zCm2wa', '2025-05-10', NULL, '138.477.099-25', 'uploads/user_1/docs/foto_cnh_frente_68484ff76d484_1749569527.jpg', 'uploads/user_1/docs/foto_cnh_verso_68484ff76dde1_1749569527.jpg', 'aprovado', '2025-05-10 12:32:16', 1, 1, 1, '', 3, 5.0, 2, NULL, 0),
-(2, 0, 1, 'Stuart', 'Capivas', '', 'capivara@gmail.com', '$2y$10$U.zVCHqT.YRRxWpPezMUhO1zLcze44j/aX9xz9mA34uZ15DG8d8ri', '2025-06-10', NULL, '567.372.568-05', 'uploads/user_2/docs/foto_cnh_frente_684851b9eb915_1749569977.jpg', 'uploads/user_2/docs/foto_cnh_verso_684851b9ec0b6_1749569977.jpg', 'aprovado', '2025-06-10 12:40:11', 1, 1, 1, 'Bob Esponja', 3, NULL, 0, NULL, 0),
-(4, 0, 1, 'Scoobert', 'Doo', '', 'scoobydoo@gmail.com', '$2y$10$9OMuyhMBeF4XL60ExWUCEOI3bCy8ZmdrRiS7R.BSYaKckLSsfv9H.', '2025-06-10', NULL, '309.088.147-04', 'uploads/user_4/docs/foto_cnh_frente_684897b3d2961_1749587891.jpg', 'uploads/user_4/docs/foto_cnh_verso_684897b3d327b_1749587891.jpg', 'aprovado', '2025-06-10 17:39:21', 1, 1, 1, 'Biscoito Scooby', 0, NULL, 0, 5.0, 2),
-(5, 0, 1, 'Valentin', 'Rojas', '', 'valentin@gmail.com', '$2y$10$2Enp.jb4mT1ARyMNzGsRLeIW.kpzN65UQn6Va1AA8kjSW3SFqP4ca', '2025-06-10', NULL, '594.635.580-55', 'uploads/user_5/docs/foto_cnh_frente_685021829ace5_1750081922.png', 'uploads/user_5/docs/foto_cnh_verso_685021829b58d_1750081922.png', 'aprovado', '2025-06-16 10:52:21', 1, 1, 1, 'Validado', 1, NULL, 0, NULL, 0),
-(6, 0, 1, 'Norville', 'Rogers', '', 'salsicha@gmail.com', '$2y$10$LBFFy7x.IshlyyJaSEV5R.hi1TYILIDURBmUi6ztFiP1ZxIlPTXS6', '2025-06-11', NULL, '853.243.670-60', 'uploads/user_6/docs/foto_cnh_frente_6849640f26be4_1749640207.jpg', 'uploads/user_6/docs/foto_cnh_verso_6849640f2a79e_1749640207.jpg', 'aprovado', '2025-06-11 08:10:41', 1, 1, 1, 'salsicha', 0, NULL, 0, NULL, 0),
-(7, 0, 1, 'Anakin', 'Skywalker', '', 'darthvader@gmail.com', '$2y$10$8959IB2rAJsNuhePmJvsf.PkTxnUTKShyrYejgutF.CXULbHgYERG', '2025-06-13', NULL, '540.120.230-04', 'uploads/user_7/docs/foto_cnh_frente_685023298c75d_1750082345.jpg', 'uploads/user_7/docs/foto_cnh_verso_685023298d0bd_1750082345.jpg', 'aprovado', '2026-04-25 17:08:15', 1, 1, 1, '', 0, NULL, 0, NULL, 0),
-(8, 0, 1, 'Rafael', 'Souza', '(11) 99111-0001', 'rafael@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0),
-(9, 0, 1, 'Mariana', 'Lima', '(21) 99222-0002', 'mariana@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0),
-(10, 0, 1, 'Camila', 'Rocha', '(41) 99333-0003', 'camila@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0),
-(11, 0, 1, 'Bruno', 'Ferreira', '(31) 99444-0004', 'bruno@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0),
-(12, 0, 1, 'Lucas', 'Carvalho', '(51) 99555-0005', 'lucas@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0),
-(13, 0, 1, 'Juliana', 'Martins', '(61) 99666-0006', 'juliana@gmail.com', '$2y$10$jjBwq2tNsiv4SSW9Px77TuNmgSe3TaSEt/bycEOKub/MUpASiu/CW', '2026-04-16', NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0);
+(1, 1, 1, 'Admin', 'Demo', NULL, 'admin@drivenow.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', CURDATE(), NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 0, 1, NULL, 0, NULL, 0, NULL, 0),
+(2, 0, 1, 'Usuario', 'Demo', NULL, 'usuario@drivenow.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', CURDATE(), NULL, NULL, NULL, NULL, 'aprovado', NULL, NULL, 1, 1, NULL, 0, NULL, 0, NULL, 0);
+
+INSERT INTO `administrador` (`id`, `conta_usuario_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -236,16 +186,6 @@ CREATE TABLE `dono` (
   `conta_usuario_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `dono`
---
-
-INSERT INTO `dono` (`id`, `conta_usuario_id`) VALUES
-(1, 1),
-(2, 5),
-(3, 8),
-(4, 10),
-(5, 12);
 
 -- --------------------------------------------------------
 
@@ -259,38 +199,6 @@ CREATE TABLE `estado` (
   `sigla` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `estado`
---
-
-INSERT INTO `estado` (`id`, `estado_nome`, `sigla`) VALUES
-(1, 'Acre', 'AC'),
-(2, 'Alagoas', 'AL'),
-(3, 'Amapá', 'AP'),
-(4, 'Amazonas', 'AM'),
-(5, 'Bahia', 'BA'),
-(6, 'Ceará', 'CE'),
-(7, 'Distrito Federal', 'DF'),
-(8, 'Espírito Santo', 'ES'),
-(9, 'Goiás', 'GO'),
-(10, 'Maranhão', 'MA'),
-(11, 'Mato Grosso', 'MT'),
-(12, 'Mato Grosso do Sul', 'MS'),
-(13, 'Minas Gerais', 'MG'),
-(14, 'Pará', 'PA'),
-(15, 'Paraíba', 'PB'),
-(16, 'Paraná', 'PR'),
-(17, 'Pernambuco', 'PE'),
-(18, 'Piauí', 'PI'),
-(19, 'Rio de Janeiro', 'RJ'),
-(20, 'Rio Grande do Norte', 'RN'),
-(21, 'Rio Grande do Sul', 'RS'),
-(22, 'Rondônia', 'RO'),
-(23, 'Roraima', 'RR'),
-(24, 'Santa Catarina', 'SC'),
-(25, 'São Paulo', 'SP'),
-(26, 'Sergipe', 'SE'),
-(27, 'Tocantins', 'TO');
 
 -- --------------------------------------------------------
 
@@ -319,15 +227,6 @@ CREATE TABLE `historico_pagamento` (
   `usuario_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `historico_pagamento`
---
-
-INSERT INTO `historico_pagamento` (`id`, `pagamento_id`, `status_anterior`, `novo_status`, `observacao`, `data_alteracao`, `usuario_id`) VALUES
-(1, 1, NULL, 'aprovado', 'Pagamento iniciado', '2026-04-16 16:09:16', 1),
-(2, 2, NULL, 'aprovado', 'Pagamento iniciado', '2026-04-16 16:11:38', 6),
-(3, 3, NULL, 'aprovado', 'Pagamento iniciado', '2026-04-26 11:26:59', 2),
-(4, 4, NULL, 'aprovado', 'Pagamento iniciado', '2026-04-26 13:51:33', 2);
 
 -- --------------------------------------------------------
 
@@ -342,16 +241,6 @@ CREATE TABLE `imagem` (
   `imagem_ordem` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `imagem`
---
-
-INSERT INTO `imagem` (`id`, `veiculo_id`, `imagem_url`, `imagem_ordem`) VALUES
-(1, 1, 'uploads/vehicles/vehicle_1/veiculo_7b3c28179b1e59cb3f2e5bbb2c284c34.jpg', 1),
-(2, 1, 'uploads/vehicles/vehicle_1/veiculo_6c93ad4b00de5ab635aad171a9d6691b.jpg', 2),
-(3, 1, 'uploads/vehicles/vehicle_1/veiculo_810dae1f90a90d6e2f6d477bfca7f065.jpg', 3),
-(4, 1, 'uploads/vehicles/vehicle_1/veiculo_79c841b9725db311a0a23b57c0ed4d25.jpg', 4),
-(5, 1, 'uploads/vehicles/vehicle_1/veiculo_201db4b04d1ada0067324608139f2c2b.jpg', 5);
 
 -- --------------------------------------------------------
 
@@ -383,71 +272,6 @@ CREATE TABLE `local` (
   `cep` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `local`
---
-
-INSERT INTO `local` (`id`, `cidade_id`, `nome_local`, `endereco`, `complemento`, `cep`) VALUES
-(1, 55, 'Parque Ibirapuera', 'Av. Pedro Álvares Cabral', 'Portão 10', '04094-050'),
-(2, 55, 'Avenida Paulista', 'Avenida Paulista', 'Próximo ao MASP', '01310-100'),
-(3, 55, 'Mercado Municipal', 'Rua da Cantareira, 306', 'Centro', '01024-000'),
-(4, 55, 'Shopping Ibirapuera', 'Av. Ibirapuera, 3103', 'Indianópolis', '04028-000'),
-(5, 55, 'Aeroporto de Congonhas', 'Av. Washington Luís', 'Campo Belo', '04626-911'),
-(6, 40, 'Cristo Redentor', 'Parque Nacional da Tijuca', 'Alto da Boa Vista', '22241-125'),
-(7, 40, 'Praia de Copacabana', 'Av. Atlântica', 'Copacabana', '22070-000'),
-(8, 40, 'Pão de Açúcar', 'Av. Pasteur, 520', 'Urca', '22290-240'),
-(9, 40, 'Maracanã', 'Av. Pres. Castelo Branco', 'Maracanã', '20271-130'),
-(10, 40, 'Aeroporto Santos Dumont', 'Praça Sen. Salgado Filho', 'Centro', '20021-340'),
-(11, 32, 'Jardim Botânico', 'Rua Engenheiro Ostoja Roguski', 'Jardim Botânico', '80210-390'),
-(12, 32, 'Museu Oscar Niemeyer', 'R. Mal. Hermes, 999', 'Centro Cívico', '80530-230'),
-(13, 32, 'Parque Barigui', 'Av. Cândido Hartmann', 'Santo Inácio', '82025-000'),
-(14, 32, 'Aeroporto Afonso Pena', 'Av. Rocha Pombo, s/n', 'São José dos Pinhais', '83010-900'),
-(15, 32, 'Shopping Estação', 'Av. Sete de Setembro, 2775', 'Rebouças', '80230-010'),
-(16, 14, 'Congresso Nacional', 'Praça dos Três Poderes', 'Zona Cívico-Administrativa', '70160-900'),
-(17, 14, 'Catedral Metropolitana', 'Esplanada dos Ministérios', 'Lote 12', '70050-000'),
-(18, 14, 'Palácio do Planalto', 'Praça dos Três Poderes', 'Zona Cívico-Administrativa', '70150-900'),
-(19, 14, 'Aeroporto Internacional de Brasília', 'Lago Sul', '', '71608-900'),
-(20, 14, 'Parque da Cidade', 'Eixo Monumental', 'Sudoeste', '70070-350'),
-(21, 9, 'Pelourinho', 'Centro Histórico', '', '40026-280'),
-(22, 9, 'Farol da Barra', 'Av. Oceânica', 'Barra', '40140-130'),
-(23, 9, 'Elevador Lacerda', 'Praça Municipal', 'Centro', '40020-010'),
-(24, 9, 'Mercado Modelo', 'Praça Visconde do Cairu', 'Comércio', '40015-970'),
-(25, 9, 'Aeroporto Internacional de Salvador', 'Praça Gago Coutinho', 'São Cristóvão', '41520-970'),
-(26, 36, 'Marco Zero', 'Av. Alfredo Lisboa', 'Recife Antigo', '50030-150'),
-(27, 36, 'Praia de Boa Viagem', 'Av. Boa Viagem', 'Boa Viagem', '51011-000'),
-(28, 36, 'Instituto Ricardo Brennand', 'R. Mário Campelo, 700', 'Várzea', '50741-540'),
-(29, 36, 'Shopping Recife', 'R. Padre Carapuceiro, 777', 'Boa Viagem', '51020-900'),
-(30, 36, 'Aeroporto Internacional do Recife', 'Av. Mascarenhas de Morais', 'Imbiribeira', '51210-000'),
-(31, 25, 'Praça da Liberdade', 'Praça da Liberdade', 'Funcionários', '30140-010'),
-(32, 25, 'Mercado Central', 'Av. Augusto de Lima, 744', 'Centro', '30190-922'),
-(33, 25, 'Mineirão', 'Av. Antônio Abrahão Caram, 1001', 'São José', '31275-000'),
-(34, 25, 'Parque Municipal', 'Av. Afonso Pena, 1377', 'Centro', '30130-002'),
-(35, 25, 'Aeroporto de Confins', 'MG-010', 'Confins', '33500-900'),
-(36, 45, 'Mercado Público', 'Largo Jornalista Glênio Peres', 'Centro Histórico', '90010-120'),
-(37, 45, 'Parque Farroupilha (Redenção)', 'Av. João Pessoa', 'Farroupilha', '90040-000'),
-(38, 45, 'Casa de Cultura Mario Quintana', 'R. dos Andradas, 736', 'Centro Histórico', '90020-004'),
-(39, 45, 'Aeroporto Salgado Filho', 'Av. Severo Dullius, 90010', 'São João', '90200-310'),
-(40, 45, 'Shopping Iguatemi', 'Av. João Wallig, 1800', 'Passo dAreia', '91340-000'),
-(41, 34, 'Cataratas do Iguaçu', 'Rodovia das Cataratas, km 18', 'Parque Nacional do Iguaçu', '85855-750'),
-(42, 34, 'Usina Hidrelétrica de Itaipu', 'Av. Tancredo Neves, 6731', 'Jardim Itaipu', '85856-970'),
-(43, 34, 'Marco das Três Fronteiras', 'Av. General Meira', 'Jardim Jupira', '85853-110'),
-(44, 34, 'Parque das Aves', 'Av. das Cataratas, 12450', 'Vila Yolanda', '85853-000'),
-(45, 34, 'Aeroporto Internacional de Foz do Iguaçu', 'Rod. das Cataratas, km 17', 'Aeroporto', '85863-900'),
-(46, 52, 'Praia de Jurerê', 'Av. dos Búzios', 'Jurerê Internacional', '88053-300'),
-(47, 52, 'Ponte Hercílio Luz', 'Centro', 'Centro', '88010-970'),
-(48, 52, 'Mercado Público', 'R. Jerônimo Coelho', 'Centro', '88010-030'),
-(49, 52, 'Praia do Campeche', 'Av. Pequeno Príncipe', 'Campeche', '88063-000'),
-(50, 52, 'Aeroporto Hercílio Luz', 'Rod. Ac. ao Aeroporto, 6200', 'Carianos', '88047-902'),
-(51, 7, 'Teatro Amazonas', 'Av. Eduardo Ribeiro', 'Centro', '69025-140'),
-(52, 7, 'Encontro das Águas', 'Rio Negro', 'Zona Rural', '69000-000'),
-(53, 7, 'Mercado Municipal Adolpho Lisboa', 'R. dos Barés', 'Centro', '69005-020'),
-(54, 7, 'Aeroporto Internacional de Manaus', 'Av. Santos Dumont', 'Tarumã', '69041-000'),
-(55, 7, 'MUSA - Museu da Amazônia', 'Av. Margarita', 'Cidade de Deus', '69099-415'),
-(56, 12, 'Praia do Futuro', 'Av. Zezé Diogo', 'Praia do Futuro', '60182-025'),
-(57, 12, 'Beach Park', 'Rua Porto das Dunas, 2734', 'Aquiraz', '61700-000'),
-(58, 12, 'Mercado Central', 'R. Gen. Bezerril, 115', 'Centro', '60055-100'),
-(59, 12, 'Catedral Metropolitana', 'Av. Dom Manuel', 'Centro', '60060-090'),
-(60, 12, 'Aeroporto Pinto Martins', 'Av. Senador Carlos Jereissati', 'Serrinha', '60741-000');
 
 -- --------------------------------------------------------
 
@@ -480,18 +304,6 @@ CREATE TABLE `mensagem` (
   `lida` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `mensagem`
---
-
-INSERT INTO `mensagem` (`id`, `reserva_id`, `remetente_id`, `mensagem`, `data_envio`, `lida`) VALUES
-(1, 1, 1, 'alo', '2026-04-16 16:25:47', 0),
-(2, 3, 1, 'Boa tarde', '2026-04-26 11:28:15', 1),
-(3, 3, 2, 'Boa tarde', '2026-04-26 11:28:36', 1),
-(4, 3, 1, 'vi que voce reservou o Civic pra esta semana certo?', '2026-04-26 11:29:01', 1),
-(5, 3, 2, 'isso mesmo vou passar o final de semana no rio', '2026-04-26 11:29:18', 1),
-(6, 3, 1, 'perfeito ja esta tudo certo vou confirmar a reserva e assim que voce chegar no rio marcaremos um lugar para voce pegar o veiculo', '2026-04-26 11:29:56', 1),
-(7, 3, 2, 'otimo até logo', '2026-04-26 11:30:06', 1);
 
 -- --------------------------------------------------------
 
@@ -512,15 +324,6 @@ CREATE TABLE `pagamento` (
   `detalhes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `pagamento`
---
-
-INSERT INTO `pagamento` (`id`, `reserva_id`, `valor`, `metodo_pagamento`, `status`, `data_pagamento`, `data_criacao`, `comprovante_url`, `codigo_transacao`, `detalhes`) VALUES
-(1, 1, 439.00, 'simulacao', 'aprovado', '2026-04-16 16:09:16', '2026-04-16 16:09:16', NULL, 'SIM_D904326433', '{\"simulacao\":true,\"observacao\":\"Pagamento simulado para fins de teste\\/desenvolvimento\"}'),
-(2, 2, 200.00, 'cartao', 'aprovado', '2026-04-16 16:11:38', '2026-04-16 16:11:38', NULL, 'CARD_EFAC63A85D', '{\"titular\":\"\",\"ultimos_digitos\":\"\",\"bandeira\":\"Visa\",\"parcelas\":\"1\"}'),
-(3, 3, 650.00, 'cartao', 'aprovado', '2026-04-26 11:26:59', '2026-04-26 11:26:59', NULL, 'CARD_3D8BCBBB57', '{\"titular\":\"STUART CAPIVAS\",\"ultimos_digitos\":\"\",\"bandeira\":\"Visa\",\"parcelas\":\"1\"}'),
-(4, 4, 500.00, 'cartao', 'aprovado', '2026-04-26 13:51:33', '2026-04-26 13:51:33', NULL, 'CARD_F313217DE4', '{\"titular\":\"\",\"ultimos_digitos\":\"\",\"bandeira\":\"Visa\",\"parcelas\":\"1\"}');
 
 -- --------------------------------------------------------
 
@@ -542,15 +345,6 @@ CREATE TABLE `reserva` (
   `observacoes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `reserva`
---
-
-INSERT INTO `reserva` (`id`, `veiculo_id`, `conta_usuario_id`, `reserva_data`, `devolucao_data`, `diaria_valor`, `taxas_de_uso`, `taxas_de_limpeza`, `valor_total`, `status`, `observacoes`) VALUES
-(1, 4, 1, '2026-04-16', '2026-04-17', 389.00, 20.00, 30.00, 439.00, 'pago', ''),
-(2, 2, 6, '2026-04-16', '2026-04-17', 150.00, 20.00, 30.00, 200.00, 'finalizada', ''),
-(3, 3, 2, '2026-04-26', '2026-04-29', 200.00, 20.00, 30.00, 650.00, 'confirmada', 'Carro para viagens no Rio de Janeiro'),
-(4, 1, 2, '2026-04-26', '2026-04-27', 450.00, 20.00, 30.00, 500.00, 'finalizada', 'teste');
 
 -- --------------------------------------------------------
 
@@ -580,21 +374,6 @@ CREATE TABLE `veiculo` (
   `total_avaliacoes` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `veiculo`
---
-
-INSERT INTO `veiculo` (`id`, `local_id`, `categoria_veiculo_id`, `dono_id`, `veiculo_marca`, `veiculo_modelo`, `veiculo_ano`, `veiculo_km`, `veiculo_placa`, `veiculo_cambio`, `veiculo_combustivel`, `veiculo_portas`, `veiculo_acentos`, `veiculo_tracao`, `disponivel`, `preco_diaria`, `descricao`, `media_avaliacao`, `total_avaliacoes`) VALUES
-(1, 11, 1, 1, 'Toyota', 'Supra', 2000, 35897, 'ZOL3T11', 'Manual', 'Gasolina', 2, 4, 'Traseira', 1, 450.00, 'Toyota Supra MK4 3.0i Turbo', 5.0, 1),
-(2, 1, 8, 1, 'Mercedes-Benz', 'Sprinter 515', 2010, 89032, 'SCO0B17', 'Automático', 'Gasolina', 3, 3, 'Dianteira', 1, 150.00, 'prefeita para uma maquina de mistério', 5.0, 1),
-(3, 6, 4, 1, 'Honda', 'Civic Type R', 2001, 94034, 'CAP1V45', 'Manual', 'Gasolina', 2, 5, 'Dianteira', 1, 200.00, 'O Honda Civic Type R é uma série de modelos hot hatchback esportivo', NULL, 0),
-(4, 44, 3, 2, 'Audi', 'Q5', 2018, 54879, 'VAL3T14', 'Automático', 'Gasolina', 4, 5, 'Dianteira', 1, 389.00, '', NULL, 0),
-(5, 1, 2, 3, 'Toyota', 'Corolla XEi', 2021, 38200, 'RFL1A23', 'Automatico', 'Flex', 4, 5, 'Dianteira', 1, 189.90, 'Sedan confortavel para viagens urbanas e rodoviarias.', NULL, 0),
-(6, 2, 3, 3, 'Jeep', 'Compass Longitude', 2022, 26500, 'RFL2B34', 'Automatico', 'Flex', 4, 5, '4x2', 1, 249.90, 'SUV com bom espaco interno e excelente conforto.', NULL, 0),
-(7, 11, 4, 4, 'Volkswagen', 'Polo', 2020, 41200, 'CML3C45', 'Manual', 'Flex', 4, 5, 'Dianteira', 1, 159.90, 'Hatch economico para uso diario na cidade.', NULL, 0),
-(8, 12, 2, 4, 'Chevrolet', 'Onix Plus', 2023, 11800, 'CML4D56', 'Automatico', 'Flex', 4, 5, 'Dianteira', 1, 179.90, 'Sedan moderno, ideal para corridas longas e conforto.', NULL, 0),
-(9, 36, 3, 5, 'Hyundai', 'Creta', 2021, 30700, 'LCS5E67', 'Automatico', 'Flex', 4, 5, '4x2', 1, 229.90, 'SUV com porta-malas amplo para viagens em familia.', NULL, 0),
-(10, 37, 5, 5, 'Fiat', 'Toro Volcano', 2022, 22400, 'LCS6F78', 'Automatico', 'Diesel', 4, 5, '4x4', 1, 279.90, 'Picape versatil para uso urbano e trabalho.', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -902,7 +681,7 @@ ALTER TABLE `veiculo`
 -- AUTO_INCREMENT de tabela `administrador`
 --
 ALTER TABLE `administrador`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `atributo`
@@ -920,55 +699,55 @@ ALTER TABLE `avaliacao_locatario`
 -- AUTO_INCREMENT de tabela `avaliacao_proprietario`
 --
 ALTER TABLE `avaliacao_proprietario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `avaliacao_veiculo`
 --
 ALTER TABLE `avaliacao_veiculo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `categoria_veiculo`
 --
 ALTER TABLE `categoria_veiculo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `cidade`
 --
 ALTER TABLE `cidade`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `conta_usuario`
 --
 ALTER TABLE `conta_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `dono`
 --
 ALTER TABLE `dono`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `historico_pagamento`
 --
 ALTER TABLE `historico_pagamento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `imagem`
 --
 ALTER TABLE `imagem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `indisponibilidade_veiculo`
@@ -980,7 +759,7 @@ ALTER TABLE `indisponibilidade_veiculo`
 -- AUTO_INCREMENT de tabela `local`
 --
 ALTER TABLE `local`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `log_verificacao_docs`
@@ -992,25 +771,25 @@ ALTER TABLE `log_verificacao_docs`
 -- AUTO_INCREMENT de tabela `mensagem`
 --
 ALTER TABLE `mensagem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `pagamento`
 --
 ALTER TABLE `pagamento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `reserva`
 --
 ALTER TABLE `reserva`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `veiculo`
 --
 ALTER TABLE `veiculo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restrições para tabelas despejadas
