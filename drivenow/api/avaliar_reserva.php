@@ -100,7 +100,7 @@ try {
     $statusReserva = strtolower((string)($reserva['status'] ?? ''));
     $statusBloqueados = ['cancelada', 'cancelado', 'rejeitada', 'rejeitado', 'pendente'];
     $devolucaoTimestamp = strtotime((string)($reserva['devolucao_data'] ?? ''));
-    $reservaEncerrada = $devolucaoTimestamp !== false && $devolucaoTimestamp < strtotime(date('Y-m-d'));
+    $reservaEncerrada = $devolucaoTimestamp !== false && $devolucaoTimestamp <= strtotime(date('Y-m-d'));
 
     if (!$reservaEncerrada || in_array($statusReserva, $statusBloqueados, true)) {
         registrarEventoSeguranca('avaliacao_state_rejected', [

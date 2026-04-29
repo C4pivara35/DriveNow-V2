@@ -34,6 +34,8 @@ function obterStatusReservaPainel(array $reserva): array
     $statusBanco = strtolower((string)($reserva['status'] ?? 'pendente'));
 
     $mapaStatusFixos = [
+        '' => ['Pendente', 'bg-amber-500/20 text-amber-300 border border-amber-400/30'],
+        'pendente' => ['Pendente', 'bg-amber-500/20 text-amber-300 border border-amber-400/30'],
         'rejeitada' => ['Rejeitada', 'bg-red-500/20 text-red-300 border border-red-400/30'],
         'cancelada' => ['Cancelada', 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30'],
         'pago' => ['Pago - aguardando confirmacao', 'bg-purple-500/20 text-purple-300 border border-purple-400/30'],
@@ -58,11 +60,13 @@ function obterStatusReservaPainel(array $reserva): array
                 : ['label' => 'Pendente', 'class' => 'bg-amber-500/20 text-amber-300 border border-amber-400/30'];
         }
 
-        if ($agora >= $inicio && $agora <= $fim) {
+        if ($statusBanco === 'confirmada' && $agora >= $inicio && $agora <= $fim) {
             return ['label' => 'Em andamento', 'class' => 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'];
         }
 
-        return ['label' => 'Concluida', 'class' => 'bg-slate-500/20 text-slate-300 border border-slate-400/30'];
+        return $statusBanco === 'confirmada'
+            ? ['label' => 'Concluida', 'class' => 'bg-slate-500/20 text-slate-300 border border-slate-400/30']
+            : ['label' => 'Pendente', 'class' => 'bg-amber-500/20 text-amber-300 border border-amber-400/30'];
     }
 
     return $statusBanco === 'confirmada'
@@ -297,7 +301,7 @@ $csrfToken = obterCsrfToken();
             <div class="section-shell rounded-3xl border subtle-border bg-white/5 p-5">
                 <p class="text-white/60 text-sm">Minhas reservas</p>
                 <p class="text-3xl font-bold mt-2"><?= $totalReservas ?></p>
-                <a href="reserva/minhas_reservas.php" class="text-indigo-200 hover:text-white text-sm mt-3 inline-block">Ver historico</a>
+                <a href="reserva/historico_reservas.php" class="text-indigo-200 hover:text-white text-sm mt-3 inline-block">Ver historico</a>
             </div>
             <div class="section-shell rounded-3xl border subtle-border bg-white/5 p-5">
                 <p class="text-white/60 text-sm">Reservas ativas</p>

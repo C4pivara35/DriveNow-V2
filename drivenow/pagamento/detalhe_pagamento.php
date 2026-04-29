@@ -244,15 +244,6 @@ $navShowMarketplaceAnchors = false;
         <div class="flex flex-wrap justify-between items-center mb-8 gap-4">
             <h1 class="text-3xl font-bold">Detalhes do Pagamento</h1>
             <div class="flex flex-wrap gap-3">
-                <?php if ($pagamento['status'] === 'pendente'): ?>
-                    <a href="confirmar_pagamento.php?id=<?= $pagamentoId ?>" class="btn-dn-primary bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-xl transition-colors border border-emerald-400/30 px-4 py-2 shadow-md hover:shadow-lg flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                        Confirmar Pagamento
-                    </a>
-                <?php endif; ?>
                 <a href="../reserva/minhas_reservas.php" class="btn-dn-ghost border border-white/20 text-white hover:bg-white/20 rounded-xl px-4 py-2 font-medium backdrop-blur-sm bg-white/5 hover:bg-white/10 shadow-md hover:shadow-lg flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
                         <path d="m15 18-6-6 6-6"/>
@@ -435,10 +426,10 @@ $navShowMarketplaceAnchors = false;
             initializeNotifications();
             
             <?php if (isset($_SESSION['notification'])): ?>
-                notify({
-                    type: '<?= $_SESSION['notification']['type'] ?>',
-                    message: '<?= $_SESSION['notification']['message'] ?>'
-                });
+                notify(
+                    <?= json_encode((string)$_SESSION['notification']['message']) ?>,
+                    <?= json_encode((string)$_SESSION['notification']['type']) ?>
+                );
                 <?php unset($_SESSION['notification']); ?>
             <?php endif; ?>
         });

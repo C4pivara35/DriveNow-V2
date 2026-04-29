@@ -112,6 +112,21 @@ $duracao = ceil(($fim - $inicio) / (60 * 60 * 24));
 // Calcular valor total novamente (para confirmação)
 $valorDiarias = $reserva['preco_diaria'] * $duracao;
 $valorTotal = $valorDiarias + $reserva['taxas_de_uso'] + $reserva['taxas_de_limpeza'];
+
+$pagamentoAtual = null;
+$pagamentoPendente = null;
+$stmt = $pdo->prepare("
+    SELECT id, status, metodo_pagamento, valor, data_criacao, comprovante_url
+    FROM pagamento
+    WHERE reserva_id = ?
+    ORDER BY id DESC
+    LIMIT 1
+");
+$stmt->execute([$reservaId]);
+$pagamentoAtual = $stmt->fetch();
+if ($pagamentoAtual && $pagamentoAtual['status'] === 'pendente') {
+    $pagamentoPendente = $pagamentoAtual;
+}
 ?>
 
 <!DOCTYPE html>
@@ -356,7 +371,7 @@ $valorTotal = $valorDiarias + $reserva['taxas_de_uso'] + $reserva['taxas_de_limp
                 // Verificar se a data de início da reserva já passou
                 $dataReservaPassou = strtotime($reserva['reserva_data']) < time();
                 
-                if ((empty($reserva['status']) || $reserva['status'] === 'pendente') && !$dataReservaPassou): ?>
+                if ((empty($reserva['status']) || $reserva['status'] === 'pendente' || $reserva['status'] === 'pago') && !$dataReservaPassou): ?>
                     <form method="post" action="reservas_recebidas.php">
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(obterCsrfToken()) ?>">
                         <input type="hidden" name="reserva_id" value="<?= $reserva['id'] ?>">
@@ -396,6 +411,23 @@ $valorTotal = $valorDiarias + $reserva['taxas_de_uso'] + $reserva['taxas_de_limp
                             Finalizar Reserva
                         </button>
                     </form>
+                <?php endif; ?>
+
+                <?php if ($pagamentoPendente): ?>
+                    <form method="post" action="../pagamento/confirmar_pagamento.php?id=<?= (int)$pagamentoPendente['id'] ?>" class="inline-block" data-confirm-payment-form>
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(obterCsrfToken()) ?>">
+                        <input type="hidden" name="retorno" value="detalhes_reserva">
+                        <button type="submit" class="btn-dn-ghost bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1 inline-block">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            Confirmar Pagamento
+                        </button>
+                    </form>
+                    <a href="../pagamento/detalhe_pagamento.php?id=<?= (int)$pagamentoPendente['id'] ?>" class="btn-dn-ghost bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                        Ver Pagamento
+                    </a>
                 <?php endif; ?>
                 
                 <a href="../mensagens/mensagens_conversa.php?reserva=<?= $reserva['id'] ?>" class="btn-dn-ghost bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
@@ -469,8 +501,16 @@ $valorTotal = $valorDiarias + $reserva['taxas_de_uso'] + $reserva['taxas_de_limp
                 </form>
                 <?php endif; ?>
                 
-                <?php if ($reserva['status'] === 'confirmada' && $now <= $inicio): ?>
-                <a href="../pagamento/realizar_pagamento.php?reserva_id=<?= $reserva['id'] ?>" class="btn-dn-ghost bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                <?php if ($pagamentoAtual): ?>
+                <a href="../pagamento/detalhe_pagamento.php?id=<?= (int)$pagamentoAtual['id'] ?>" class="btn-dn-ghost bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1 inline-block">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    Ver Pagamento
+                </a>
+                <?php elseif ($reserva['status'] === 'confirmada' && $now <= $inicio): ?>
+                <a href="../pagamento/realizar_pagamento.php?reserva=<?= $reserva['id'] ?>" class="btn-dn-ghost bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-400/30 rounded-lg px-4 py-2 text-sm font-medium transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1 inline-block">
                         <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                         <line x1="1" y1="10" x2="23" y2="10"></line>
@@ -504,6 +544,72 @@ $valorTotal = $valorDiarias + $reserva['taxas_de_uso'] + $reserva['taxas_de_limp
         <p>© <script>document.write(new Date().getFullYear())</script> DriveNow. Todos os direitos reservados.</p>
     </footer>
 
+    <div id="confirmPaymentModal" class="hidden fixed inset-0 z-[1000] bg-black/60 p-4 items-center justify-center">
+        <div class="section-shell w-full max-w-md rounded-3xl border subtle-border bg-slate-900 p-6 shadow-xl">
+            <h3 class="text-xl font-bold text-white mb-3">Confirmar pagamento</h3>
+            <p class="text-white/75 mb-6">Confirme somente depois de validar o pagamento do locatario. Deseja continuar?</p>
+            <div class="flex justify-end gap-3">
+                <button type="button" id="cancelPaymentConfirm" class="btn-dn-ghost px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+                    Cancelar
+                </button>
+                <button type="button" id="acceptPaymentConfirm" class="btn-dn-primary px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white transition-colors">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="../assets/notifications.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php if (isset($_SESSION['notification'])): ?>
+                notify(
+                    <?= json_encode((string)$_SESSION['notification']['message']) ?>,
+                    <?= json_encode((string)$_SESSION['notification']['type']) ?>
+                );
+                <?php unset($_SESSION['notification']); ?>
+            <?php endif; ?>
+
+            const confirmPaymentModal = document.getElementById('confirmPaymentModal');
+            const cancelPaymentConfirm = document.getElementById('cancelPaymentConfirm');
+            const acceptPaymentConfirm = document.getElementById('acceptPaymentConfirm');
+            let pendingPaymentForm = null;
+
+            document.querySelectorAll('[data-confirm-payment-form]').forEach((form) => {
+                form.addEventListener('submit', function(event) {
+                    if (form.dataset.confirmed === 'true') {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    pendingPaymentForm = form;
+                    confirmPaymentModal.classList.remove('hidden');
+                    confirmPaymentModal.classList.add('flex');
+                });
+            });
+
+            function closeConfirmPaymentModal() {
+                confirmPaymentModal.classList.add('hidden');
+                confirmPaymentModal.classList.remove('flex');
+                pendingPaymentForm = null;
+            }
+
+            cancelPaymentConfirm.addEventListener('click', closeConfirmPaymentModal);
+            confirmPaymentModal.addEventListener('click', function(event) {
+                if (event.target === confirmPaymentModal) {
+                    closeConfirmPaymentModal();
+                }
+            });
+
+            acceptPaymentConfirm.addEventListener('click', function() {
+                if (!pendingPaymentForm) {
+                    return;
+                }
+
+                pendingPaymentForm.dataset.confirmed = 'true';
+                pendingPaymentForm.submit();
+            });
+        });
+    </script>
 </body>
 </html>

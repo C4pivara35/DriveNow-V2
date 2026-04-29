@@ -32,7 +32,7 @@ try {
         UPDATE reserva
         SET status = 'finalizada'
         WHERE status = 'confirmada'
-        AND devolucao_data < CURRENT_DATE()
+        AND devolucao_data <= CURRENT_DATE()
     ");
     
     $stmt->execute();

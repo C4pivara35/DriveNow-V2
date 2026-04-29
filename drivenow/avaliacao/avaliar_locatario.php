@@ -42,7 +42,12 @@ $stmt = $pdo->prepare("
     FROM reserva r
     INNER JOIN veiculo v ON r.veiculo_id = v.id
     INNER JOIN conta_usuario u ON r.conta_usuario_id = u.id
-    WHERE r.id = ? AND v.dono_id = ? AND r.status = 'finalizada'
+    WHERE r.id = ?
+      AND v.dono_id = ?
+      AND (
+            r.status = 'finalizada'
+         OR (r.status = 'confirmada' AND DATE(r.devolucao_data) <= CURRENT_DATE())
+      )
 ");
 $stmt->execute([$reservaId, $dono['id']]);
 $reserva = $stmt->fetch();

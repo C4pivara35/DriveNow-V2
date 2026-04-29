@@ -25,7 +25,8 @@ function autoAprovacaoCartaoPermitida(): bool
 }
 
 // Verificar se o ID da reserva foi fornecido
-if (!isset($_GET['reserva']) || !is_numeric($_GET['reserva'])) {
+$reservaParam = $_GET['reserva'] ?? ($_GET['reserva_id'] ?? null);
+if ($reservaParam === null || !is_numeric($reservaParam)) {
     $_SESSION['notification'] = [
         'type' => 'error',
         'message' => 'Reserva não especificada.'
@@ -34,7 +35,7 @@ if (!isset($_GET['reserva']) || !is_numeric($_GET['reserva'])) {
     exit;
 }
 
-$reservaId = (int)$_GET['reserva'];
+$reservaId = (int)$reservaParam;
 
 // Verificar se a reserva existe e pertence ao usuário
 $stmt = $pdo->prepare("
@@ -646,10 +647,10 @@ $navShowMarketplaceAnchors = false;
             initializeNotifications();
             
             <?php if (isset($_SESSION['notification'])): ?>
-                notify({
-                    type: '<?= $_SESSION['notification']['type'] ?>',
-                    message: '<?= $_SESSION['notification']['message'] ?>'
-                });
+                notify(
+                    <?= json_encode((string)$_SESSION['notification']['message']) ?>,
+                    <?= json_encode((string)$_SESSION['notification']['type']) ?>
+                );
                 <?php unset($_SESSION['notification']); ?>
             <?php endif; ?>
             
