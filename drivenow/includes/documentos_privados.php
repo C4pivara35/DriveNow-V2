@@ -28,12 +28,18 @@ function normalizarCaminhoDocumento(?string $caminho): string
 
 function obterDiretorioDocumentoUsuario(int $usuarioId): string
 {
-    return documentosProjetoBaseDir() . '/uploads/user_' . $usuarioId . '/docs';
+    $diretorio = documentosPrivadosBaseDir() . '/user_' . $usuarioId . '/docs';
+
+    if (!is_dir($diretorio)) {
+        mkdir($diretorio, 0755, true);
+    }
+
+    return $diretorio;
 }
 
 function obterPrefixoDocumentoUsuario(int $usuarioId): string
 {
-    return 'uploads/user_' . $usuarioId . '/docs/';
+    return 'private_documents/user_' . $usuarioId . '/docs/';
 }
 
 function obterUrlDocumentoUsuario(int $usuarioId, string $tipo, bool $inline = true, string $basePath = ''): string
@@ -72,19 +78,19 @@ function resolverCaminhoDocumento(?string $caminho): ?string
     }
 
     if (str_starts_with($caminho, $prefixoLegado)) {
-        $base = realpath(documentosProjetoBaseDir() . '/uploads');
-        $arquivo = realpath(documentosProjetoBaseDir() . '/' . $caminho);
-
-        if ($base !== false && $arquivo !== false && str_starts_with(str_replace('\\', '/', $arquivo), rtrim(str_replace('\\', '/', $base), '/') . '/')) {
-            return $arquivo;
-        }
-
         $relativoPrivado = preg_replace('#^uploads/#', '', $caminho);
         $basePrivada = realpath(documentosPrivadosBaseDir());
         $arquivoPrivado = realpath(documentosPrivadosBaseDir() . '/' . $relativoPrivado);
 
         if ($basePrivada !== false && $arquivoPrivado !== false && str_starts_with(str_replace('\\', '/', $arquivoPrivado), rtrim(str_replace('\\', '/', $basePrivada), '/') . '/')) {
             return $arquivoPrivado;
+        }
+
+        $base = realpath(documentosProjetoBaseDir() . '/uploads');
+        $arquivo = realpath(documentosProjetoBaseDir() . '/' . $caminho);
+
+        if ($base !== false && $arquivo !== false && str_starts_with(str_replace('\\', '/', $arquivo), rtrim(str_replace('\\', '/', $base), '/') . '/')) {
+            return $arquivo;
         }
     }
 

@@ -221,57 +221,20 @@ function getNomeAmigavel($field) {
 /**
  * Obtém o caminho completo da imagem para exibição
  */
-function getImagemUrl($caminho) {
+function getImagemUrl($caminho, int $usuarioId, string $tipo) {
     // Verifica se o caminho é vazio
     if (empty($caminho)) {
         return '';
     }
     
     // Verifica se o caminho já começa com http ou https
-    if (preg_match('/^https?:\/\//', $caminho)) {
-        return $caminho;
-    }
-    
-    // Corrigir o caminho caso tenha "user_user_" duplicado
-    if (strpos($caminho, 'user_user_') !== false) {
-        $caminho = str_replace('user_user_', 'user_', $caminho);
-    }
-    
-    // Normalizar barras
-    $caminho = str_replace('\\', '/', $caminho);
-    
-    // Adicionar o caminho base do site
-    $caminhoBase = '../';
-    
-    return $caminhoBase . $caminho;
+    return obterUrlDocumentoUsuario($usuarioId, $tipo, true, '../');
 }
 
 /**
  * Verifica se um arquivo existe e está acessível
  */
 function verificarArquivo($caminho) {
-    // Corrigir o caminho caso tenha "user_user_" duplicado
-    if (strpos($caminho, 'user_user_') !== false) {
-        $caminho = str_replace('user_user_', 'user_', $caminho);
-    }
-    
-    // Normalizar barras
-    $caminho = str_replace('\\', '/', $caminho);
-    
-    // Verificar diferentes possibilidades
-    $possibilidades = [
-        '../' . $caminho,
-        $caminho,
-        realpath('../' . $caminho),
-        realpath($caminho)
-    ];
-    
-    foreach ($possibilidades as $path) {
-        if ($path && file_exists($path) && is_readable($path)) {
-            return true;
-        }
-    }
-    
-    return false;
+    return documentoExiste($caminho);
 }
 ?>

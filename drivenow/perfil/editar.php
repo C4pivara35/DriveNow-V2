@@ -612,43 +612,13 @@ function getNomeAmigavel($field) {
 /**
  * Obtém o caminho completo da imagem para exibição
  */
-function getImagemUrl($caminho) {
+function getImagemUrl($caminho, int $usuarioId, string $tipo) {
     // Verifica se o caminho é vazio
     if (empty($caminho)) {
         return '';
     }
     
-    // Verifica se o caminho já começa com http ou https
-    if (preg_match('/^https?:\/\//', $caminho)) {
-        return $caminho;
-    }
-    
-    // Corrigir o caminho caso tenha "user_user_" duplicado
-    if (strpos($caminho, 'user_user_') !== false) {
-        $caminho = str_replace('user_user_', 'user_', $caminho);
-        error_log("Caminho corrigido para: " . $caminho);
-    }
-    
-    // Normalizar barras (converter backslashes para forward slashes)
-    $caminho = str_replace('\\', '/', $caminho);
-    
-    // Adicionar o caminho base do site
-    $caminhoBase = '../'; // Ajuste conforme necessário para o seu ambiente
-    
-    // Verificar se o arquivo existe
-    $fullPath = $caminhoBase . $caminho;
-    $normalizedPath = realpath($fullPath);
-    
-    if (!$normalizedPath || !file_exists($normalizedPath)) {
-        error_log("Arquivo não encontrado: " . $fullPath);
-        // Tentar verificar se o problema é com o caminho base
-        if (file_exists($caminho)) {
-            error_log("Arquivo encontrado sem o caminho base!");
-            return $caminho;
-        }
-    }
-    
-    return $caminhoBase . $caminho;
+    return obterUrlDocumentoUsuario($usuarioId, $tipo, true, '../');
 }
 
 /**
@@ -669,32 +639,7 @@ function getFilePath($caminho) {
  * Verifica se um arquivo existe e está acessível
  */
 function verificarArquivo($caminho) {
-    // Corrigir o caminho caso tenha "user_user_" duplicado
-    if (strpos($caminho, 'user_user_') !== false) {
-        $caminho = str_replace('user_user_', 'user_', $caminho);
-        error_log("Caminho corrigido em verificarArquivo: " . $caminho);
-    }
-    
-    // Normalizar barras
-    $caminho = str_replace('\\', '/', $caminho);
-    
-    // Verificar diferentes possibilidades
-    $possibilidades = [
-        '../' . $caminho,
-        $caminho,
-        realpath('../' . $caminho),
-        realpath($caminho)
-    ];
-    
-    foreach ($possibilidades as $path) {
-        if ($path && file_exists($path) && is_readable($path)) {
-            error_log("Arquivo encontrado em: " . $path);
-            return true;
-        }
-    }
-    
-    error_log("Arquivo não encontrado em nenhum caminho tentado para: " . $caminho);
-    return false;
+    return documentoExiste($caminho);
 }
 ?>
 
@@ -1405,7 +1350,7 @@ function verificarArquivo($caminho) {
                                 <!-- Mostrar as imagens dos documentos -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
                                     <?php if ($temCnhFrente): 
-                                        $imgFrenteUrl = getImagemUrl($docData['foto_cnh_frente']);
+                                        $imgFrenteUrl = getImagemUrl($docData['foto_cnh_frente'], $usuarioId, 'frente');
                                         $arquivoFrenteExiste = verificarArquivo($docData['foto_cnh_frente']);
                                     ?>
                                         <div class="doc-image-container">
@@ -1432,7 +1377,7 @@ function verificarArquivo($caminho) {
                                     <?php endif; ?>
                                     
                                     <?php if ($temCnhVerso): 
-                                        $imgVersoUrl = getImagemUrl($docData['foto_cnh_verso']);
+                                        $imgVersoUrl = getImagemUrl($docData['foto_cnh_verso'], $usuarioId, 'verso');
                                         $arquivoVersoExiste = verificarArquivo($docData['foto_cnh_verso']);
                                     ?>
                                         <div class="doc-image-container">

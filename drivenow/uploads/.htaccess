@@ -1,5 +1,11 @@
 Options -Indexes
 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Block legacy CNH documents at uploads/user_*/docs/* while keeping other public uploads available.
+    RewriteRule ^user_[0-9]+/docs/ - [F,L]
+</IfModule>
+
 <FilesMatch "\.(php|php[0-9]?|phtml|phar)$">
     Require all denied
 </FilesMatch>

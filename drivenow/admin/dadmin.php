@@ -1271,10 +1271,7 @@ $navShowMarketplaceAnchors = false;
                 return;
             }
 
-            const caminhoNormalizado = String(caminho).replace(/\\/g, '/').replace(/^\//, '');
-            imgEl.src = caminhoNormalizado.startsWith('uploads/')
-                ? '../' + caminhoNormalizado
-                : '../perfil/download_documento.php?id=' + encodeURIComponent(userId) + '&tipo=' + encodeURIComponent(tipo) + '&inline=1';
+            imgEl.src = '../perfil/download_documento.php?id=' + encodeURIComponent(userId) + '&tipo=' + encodeURIComponent(tipo) + '&inline=1';
             imgEl.classList.remove('hidden');
             semEl.classList.add('hidden');
 
