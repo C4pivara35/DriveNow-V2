@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/auth.php';
+require_once '../includes/security_log.php';
 
 // Verificar autenticação
 exigirPerfil('logado');
@@ -7,6 +8,21 @@ exigirPerfil('logado');
 $usuario = getUsuario();
 $csrfToken = obterCsrfToken();
 global $pdo;
+
+function ambienteLocalPagamento(): bool
+{
+    return in_array(strtolower((string)envValor('APP_ENV', 'production')), ['local', 'dev', 'development'], true);
+}
+
+function simulacaoPagamentoPermitida(): bool
+{
+    return ambienteLocalPagamento() && envBooleano('PAYMENT_SIMULATION_ENABLED', false);
+}
+
+function autoAprovacaoCartaoPermitida(): bool
+{
+    return ambienteLocalPagamento() && envBooleano('PAYMENT_CARD_AUTOAPPROVE_ENABLED', false);
+}
 
 // Verificar se o ID da reserva foi fornecido
 if (!isset($_GET['reserva']) || !is_numeric($_GET['reserva'])) {
@@ -61,9 +77,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $metodo = $_POST['metodo_pagamento'] ?? '';
     $status = 'pendente';
+    $metodosPermitidos = ['cartao', 'pix', 'boleto'];
+
+    if (simulacaoPagamentoPermitida()) {
+        $metodosPermitidos[] = 'simulacao';
+    }
+
+    if ($metodo === 'simulacao' && !simulacaoPagamentoPermitida()) {
+        registrarEventoSeguranca('payment_simulation_blocked', [
+            'reserva_id' => $reservaId,
+            'metodo' => 'simulacao',
+        ]);
+        $_SESSION['notification'] = [
+            'type' => 'error',
+            'message' => 'Metodo de pagamento indisponivel.'
+        ];
+        header("Location: realizar_pagamento.php?reserva={$reservaId}");
+        exit;
+    }
     
     // Verificar se o método é válido
-    if (!in_array($metodo, ['cartao', 'pix', 'boleto', 'simulacao'])) {
+    if (!in_array($metodo, $metodosPermitidos, true)) {
         $_SESSION['notification'] = [
             'type' => 'error',
             'message' => 'Método de pagamento inválido.'
@@ -85,15 +119,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             // Para simulação, vamos aprovar automaticamente pagamentos com cartão
             else if ($metodo === 'cartao') {
-                $status = 'aprovado';
-                $dataPagamento = 'NOW()';
+                $autoAprovado = autoAprovacaoCartaoPermitida();
+                $status = $autoAprovado ? 'aprovado' : 'pendente';
+                $dataPagamento = $autoAprovado ? 'NOW()' : 'NULL';
                 $codigoTransacao = 'CARD_' . strtoupper(substr(md5(uniqid()), 0, 10));
                 $detalhes = json_encode([
                     'titular' => $_POST['titular_cartao'] ?? 'N/D',
                     'ultimos_digitos' => substr($_POST['numero_cartao'] ?? '0000', -4),
                     'bandeira' => 'Visa',
-                    'parcelas' => $_POST['parcelas'] ?? 1
+                    'parcelas' => $_POST['parcelas'] ?? 1,
+                    'auto_aprovado' => $autoAprovado
                 ]);
+
+                if ($autoAprovado) {
+                    registrarEventoSeguranca('payment_card_autoapproved_local', [
+                        'reserva_id' => $reservaId,
+                        'metodo' => 'cartao',
+                    ]);
+                } else {
+                    registrarEventoSeguranca('payment_card_autoapproval_blocked', [
+                        'reserva_id' => $reservaId,
+                        'metodo' => 'cartao',
+                    ]);
+                }
             } 
             // PIX fica pendente até confirmação
             else if ($metodo === 'pix') {
@@ -135,11 +183,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pagamentoId = $pdo->lastInsertId();
             
             // Registrar no histórico
+            $observacaoHistorico = $status === 'aprovado'
+                ? 'Pagamento aprovado em ambiente local'
+                : 'Pagamento iniciado';
+
             $stmt = $pdo->prepare("
                 INSERT INTO historico_pagamento (pagamento_id, status_anterior, novo_status, observacao, usuario_id)
-                VALUES (?, NULL, ?, 'Pagamento iniciado', ?)
+                VALUES (?, NULL, ?, ?, ?)
             ");
-            $stmt->execute([$pagamentoId, $status, $usuario['id']]);
+            $stmt->execute([$pagamentoId, $status, $observacaoHistorico, $usuario['id']]);
             
             
             // Se o pagamento foi aprovado, atualizar o status da reserva
@@ -151,12 +203,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $_SESSION['notification'] = [
                     'type' => 'success',
-                    'message' => 'Pagamento aprovado com sucesso! Aguardando confirmação do proprietário.'
+                    'message' => 'Pagamento aprovado em ambiente local. Aguardando confirmacao do proprietario.'
                 ];
             } else {
                 $_SESSION['notification'] = [
                     'type' => 'info',
-                    'message' => 'Pagamento iniciado. Aguardando confirmação.'
+                    'message' => 'Pagamento iniciado. Aguardando confirmacao.'
                 ];
             }
             
@@ -564,6 +616,7 @@ $navShowMarketplaceAnchors = false;
                     </div>
                     
                     <!-- Botão para demonstração - Simulação de Pagamento -->
+                    <?php if (simulacaoPagamentoPermitida()): ?>
                     <div class="mt-8 border-t subtle-border pt-6">
                         <h3 class="text-lg font-medium mb-4">Opção para Teste/Desenvolvimento</h3>
                         <form action="" method="post">
@@ -576,6 +629,7 @@ $navShowMarketplaceAnchors = false;
                             <p class="text-xs text-white/50 mt-2 text-center">Esta opção existe apenas para fins de teste e desenvolvimento.</p>
                         </form>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>

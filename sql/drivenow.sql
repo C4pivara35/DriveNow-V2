@@ -328,6 +328,31 @@ CREATE TABLE `pagamento` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `password_resets`
+--
+
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `conta_usuario_id` int(11) NOT NULL,
+  `token_hash` char(64) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `used_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `requester_ip` varchar(45) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_password_resets_token_hash` (`token_hash`),
+  KEY `idx_password_resets_user` (`conta_usuario_id`),
+  KEY `idx_password_resets_expires_at` (`expires_at`),
+  CONSTRAINT `fk_password_resets_user`
+    FOREIGN KEY (`conta_usuario_id`) REFERENCES `conta_usuario` (`id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `reserva`
 --
 
@@ -656,6 +681,12 @@ ALTER TABLE `pagamento`
   ADD PRIMARY KEY (`id`),
   ADD KEY `reserva_id` (`reserva_id`);
 
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_password_resets_token_hash` (`token_hash`),
+  ADD KEY `idx_password_resets_user` (`conta_usuario_id`),
+  ADD KEY `idx_password_resets_expires_at` (`expires_at`);
+
 --
 -- Índices de tabela `reserva`
 --
@@ -779,6 +810,9 @@ ALTER TABLE `mensagem`
 ALTER TABLE `pagamento`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de tabela `reserva`
 --
@@ -896,6 +930,9 @@ ALTER TABLE `mensagem`
 --
 ALTER TABLE `pagamento`
   ADD CONSTRAINT `pagamento_ibfk_1` FOREIGN KEY (`reserva_id`) REFERENCES `reserva` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `password_resets`
+  ADD CONSTRAINT `fk_password_resets_user` FOREIGN KEY (`conta_usuario_id`) REFERENCES `conta_usuario` (`id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `reserva`

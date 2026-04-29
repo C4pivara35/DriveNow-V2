@@ -4,6 +4,7 @@ require_once '../includes/auth.php';
 verificarAutenticacao();
 
 $usuario = getUsuario();
+$csrfToken = obterCsrfToken();
 
 // Buscar histórico completo de reservas do usuário
 global $pdo;
@@ -108,6 +109,7 @@ $reservas = $stmt->fetchAll();
             </div>
             <div class="modal-body">
                 <form id="formAvaliacao">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
                     <input type="hidden" name="reserva_id" id="reserva_id">
                     <div class="mb-3">
                         <label for="nota" class="form-label">Nota (1-5)</label>
